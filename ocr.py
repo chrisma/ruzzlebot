@@ -13,13 +13,17 @@ def rmsdiff(image1, image2):
 	return rms
 
 b = Image.open('characters/B.png').convert('RGB')
+m = Image.open('characters/M.png').convert('RGB')
 def char_from_comparison(image):
+	"Distinguish I's from B's"
 	if rmsdiff(image, b) < 10:
 		return 'B'
+	if rmsdiff(image, m) < 10:
+		return 'M'
 	return 'I'
 
-def recognize_chars(image_path):
-	image = Image.open(image_path).convert('RGB')
+def recognize_chars(image):
+	image = image.convert('RGB')
 	width = 90
 	height = 90
 	distance = 170 
@@ -37,6 +41,7 @@ def recognize_chars(image_path):
 			# Tesseract doesn't seem to recognize I's and B's
 			if char == '':
 				char = char_from_comparison(crop)
+				# crop.save('fail' + str(x) + '_' + str(y) + '.png')
 			out.append(char)
 			x += distance
 		y += distance
@@ -48,24 +53,37 @@ def recognize_chars(image_path):
 if __name__ == "__main__":
 	class OcrTestCase(unittest.TestCase):
 		def test_ocr1(self):
-			self.assertEqual(recognize_chars('screenshots/1.png'), ['S', 'S', 'T', 'Z', 'E', 'H', 'E', 'G', 'R', 'I', 'R', 'E', 'T', 'T', 'N', 'L'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/1.png')), 
+				['S', 'S', 'T', 'Z', 'E', 'H', 'E', 'G', 'R', 'I', 'R', 'E', 'T', 'T', 'N', 'L'])
 		def test_ocr2(self):
-			self.assertEqual(recognize_chars('screenshots/2.png'), ['S', 'R', 'N', 'T', 'R', 'E', 'E', 'A', 'I', 'I', 'R', 'G', 'N', 'E', 'N', 'T'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/2.png')),
+				['S', 'R', 'N', 'T', 'R', 'E', 'E', 'A', 'I', 'I', 'R', 'G', 'N', 'E', 'N', 'T'])
 		def test_ocr3(self):
-			self.assertEqual(recognize_chars('screenshots/3.png'), ['E', 'U', 'R', 'E', 'T', 'N', 'A', 'E', 'E', 'R', 'O', 'T', 'G', 'O', 'D', 'L'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/3.png')),
+				['E', 'U', 'R', 'E', 'T', 'N', 'A', 'E', 'E', 'R', 'O', 'T', 'G', 'O', 'D', 'L'])
 		def test_ocr4(self):
-			self.assertEqual(recognize_chars('screenshots/4.png'), ['E', 'S', 'V', 'L', 'E', 'A', 'A', 'E', 'B', 'N', 'R', 'E', 'N', 'E', 'D', 'E'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/4.png')),
+				['E', 'S', 'V', 'L', 'E', 'A', 'A', 'E', 'B', 'N', 'R', 'E', 'N', 'E', 'D', 'E'])
 		def test_ocr5(self):
-			self.assertEqual(recognize_chars('screenshots/5.png'), ['I', 'K', 'O', 'E', 'O', 'E', 'R', 'N', 'R', 'T', 'T', 'R', 'S', 'E', 'R', 'A'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/5.png')),
+				['I', 'K', 'O', 'E', 'O', 'E', 'R', 'N', 'R', 'T', 'T', 'R', 'S', 'E', 'R', 'A'])
 		def test_ocr6(self):
-			self.assertEqual(recognize_chars('screenshots/6.png'), ['P', 'S', 'R', 'C', 'E', 'N', 'A', 'H', 'D', 'R', 'I', 'G', 'E', 'N', 'E', 'A'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/6.png')),
+				['P', 'S', 'R', 'C', 'E', 'N', 'A', 'H', 'D', 'R', 'I', 'G', 'E', 'N', 'E', 'A'])
 		def test_ocr7(self):
-			self.assertEqual(recognize_chars('screenshots/7.png'), ['H', 'E', 'K', 'U', 'A', 'L', 'U', 'N', 'N', 'E', 'A', 'R', 'E', 'E', 'S', 'T'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/7.png')),
+				['H', 'E', 'K', 'U', 'A', 'L', 'U', 'N', 'N', 'E', 'A', 'R', 'E', 'E', 'S', 'T'])
 		def test_ocr8(self):
-			self.assertEqual(recognize_chars('screenshots/8.png'), ['H', 'N', 'E', 'Z', 'S', 'R', 'D', 'T', 'A', 'N', 'E', 'E', 'U', 'S', 'N', 'H'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/8.png')),
+				['H', 'N', 'E', 'Z', 'S', 'R', 'D', 'T', 'A', 'N', 'E', 'E', 'U', 'S', 'N', 'H'])
 		def test_ocr9(self):
-			self.assertEqual(recognize_chars('screenshots/9.png'), ['A', 'T', 'E', 'L', 'B', 'L', 'I', 'D', 'E', 'U', 'E', 'N', 'M', 'N', 'D', 'T'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/9.png')),
+				['A', 'T', 'E', 'L', 'B', 'L', 'I', 'D', 'E', 'U', 'E', 'N', 'M', 'N', 'D', 'T'])
 		def test_ocr10(self):
-			self.assertEqual(recognize_chars('screenshots/10.png'), ['G', 'G', 'E', 'L', 'E', 'R', 'E', 'A', 'R', 'T', 'H', 'E', 'E', 'N', 'A', 'E'])
+			self.assertEqual(recognize_chars(Image.open('screenshots/10.png')),
+				['G', 'G', 'E', 'L', 'E', 'R', 'E', 'A', 'R', 'T', 'H', 'E', 'E', 'N', 'A', 'E'])
+		def test_ocr11(self):
+			self.assertEqual(recognize_chars(Image.open('screenshots/11.png')),
+				['E', 'M', 'R', 'T', 'N', 'H', 'E', 'A', 'E', 'L', 'E', 'T', 'F', 'I', 'T', 'N'])
 
 	unittest.main()

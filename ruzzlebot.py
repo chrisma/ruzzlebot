@@ -11,7 +11,8 @@ from socket import *
 import sys
 import time
 import zipfile
-
+from ocr import recognize_chars
+from pprint import pprint
 
 def ord_compat(x):
     if sys.version < '3':
@@ -154,9 +155,8 @@ def process_screen():
 
 
 def input_board():
-    clean = []
-    while len(clean) < 16:
-        clean += re.findall('[A-Z]', input().upper())
+    screen = get_screenshot()
+    clean = recognize_chars(screen)
 
     return [[clean[i + j * 4] for i in range(4)] for j in range(4)]
 
@@ -240,8 +240,9 @@ def main():
     input_f = f.read()[8:] # Skip the header.
     f.close()
     
-    print('What are the 16 letters?')
+    print('Getting the 16 letters...')
     board = input_board()
+    pprint(board)
     
     print('Exploring board...')
     paths = []
